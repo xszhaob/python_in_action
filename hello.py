@@ -1,6 +1,5 @@
-s1 = 72
-s2 = 85
+import re
 
-r = (s2 - s1) / s1
-
-print('%.2f' % r)
+re_c = re.compile("^(.*hangzhou)")
+lists = re_c.findall('/hellhangzhou')
+print(lists)
