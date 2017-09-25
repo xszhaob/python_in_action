@@ -37,4 +37,5 @@ def get_random_external_link(starting_page):
 	external_links = get_external_links(bs_obj, split_address(starting_page)[0])
 	if len(external_links) == 0:
 		internal_links = get_internal_links(bs_obj, starting_page)
+		return get
 
