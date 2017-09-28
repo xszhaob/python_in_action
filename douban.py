@@ -19,10 +19,10 @@ def get_title(url, index):
 
 	with open('douban_book.txt','a', encoding = 'UTF-8') as file_obj:
 		for link in links:
-			# desc_name(link.stripped_strings)
 			if link.stripped_strings is not None and len(list(link.stripped_strings)) > 0:
 				for string in link.stripped_strings:
 					file_obj.write(string )
+				print(link.parent.next_sibling)
 				file_obj.write('\n')
 
 for val in range(0,10):
