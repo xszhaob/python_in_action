@@ -1,30 +1,44 @@
 ﻿from urllib import parse,request
 from bs4 import BeautifulSoup
-import sys
 import re
 
 
 index = {'icn' : 'index-book250-all'}
 url = 'https://book.douban.com/top250'
 
-
-
+# 获取书名 评分 描述
 def get_title(url, index):
 	data = parse.urlencode(index)
 	req = request.Request(url + '?' + data)
-	print(req.get_full_url())
 	html = request.urlopen(req).read().decode('utf-8')
 	bs_obj = BeautifulSoup(html, 'html.parser')
-	links = bs_obj.findAll('a', href = re.compile('.*subject.*'))
+	links = bs_obj.findAll('div', {'class' : 'pl2'})
+	for link in links:
+		# print(link)
+		book_name = get_book_name(link)
+		desc = get_desc(link)
+		star = get_star(link)
+		print(book_name + '  ' + star + '  ' + desc)
 
-	with open('douban_book.txt','a', encoding = 'UTF-8') as file_obj:
-		for link in links:
-			if link.stripped_strings is not None and len(list(link.stripped_strings)) > 0:
-				for string in link.stripped_strings:
-					file_obj.write(string )
-				print(link.parent.next_sibling)
-				file_obj.write('\n')
 
+# 获取书名
+def get_book_name(link):
+	text = link.findAll('a', href = re.compile('.*subject.*'))[0].get_text()
+	strings = ''
+	for string in text:
+		strings += string.strip()
+	return strings
+
+# 获取描述
+def get_desc(link):
+	return link.find_next_siblings('p', {'class' : 'pl'})[0].get_text()
+
+# 获取评分
+def get_star(link):
+	star_div = link.find_next_siblings('div', {'class' : 'star clearfix'})[0]
+	return star_div.findAll('span', {'class' : 'rating_nums'})[0].get_text()
+
+# 执行
 for val in range(0,10):
 	if val != 0:
 		index = {'start' : val * 25}
