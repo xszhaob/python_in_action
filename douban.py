@@ -24,10 +24,9 @@ def get_title(url, index):
 # 获取书名
 def get_book_name(link):
 	text = link.findAll('a', href = re.compile('.*subject.*'))[0].get_text()
-	strings = ''
-	for string in text:
-		strings += string.strip()
-	return strings
+	text = re.sub('\n+', '', text)
+	text = re.sub(' +', '', text)
+	return text
 
 # 获取描述
 def get_desc(link):
